@@ -1,0 +1,30 @@
+@* Dashboard Template File *@
+@(userId: Long, userName: String, tasks: Seq[String])(implicit request: RequestHeader, flash: Flash)
+@main("Welcome to dashboard") {
+<h1>Welcome to dashboard @userName</h1>
+
+<div>@userId</div>
+
+<div>
+    <h3>Tasks for @userName</h3>
+    <ul>
+        @for((task, i) <- tasks.zipWithIndex) {
+        <li>@task</li>
+        <form method="post" action="@routes.LandingController.deleteTask">
+            @helper.CSRF.formField
+            <input type="hidden" name="taskname" value="@task"/>
+            <input type="submit" value="Delete" id="delete-@i"/>
+        </form>
+        }
+    </ul>
+
+   <h3>Add Task</h3>
+    <form method="post" action="@routes.LandingController.createTask">
+        @helper.CSRF.formField
+        <input type="text" name="taskText"/>
+        <input type="submit" value="Add Task"/>
+    </form>
+</div>
+
+<a href="@routes.LoginController.logout">Log out</a>
+}
